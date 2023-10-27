@@ -1,0 +1,7 @@
+Name	Gene(s)	Protein change	Condition(s)	Clinical significance (Last reviewed)	Review status	Accession	GRCh37Chromosome	GRCh37Location	GRCh38Chromosome	GRCh38Location	VariationID	AlleleID(s)	dbSNP ID	Canonical SPDI	
+NM_002880.4(RAF1):c.1141G>A (p.Asp381Asn)	RAF1	D381N, D401N, D320N, D300N, D267N, D348N	RASopathy	Benign(Last reviewed: Apr 18, 2017)	reviewed by expert panel	VCV000181509	3	12633259	3	12591760	181509	179051	rs559632360	NC_000003.12:12591759:C:T
+NM_002880.4(RAF1):c.923C>T (p.Pro308Leu)	RAF1	P308L, P328L, P275L, P227L, P194L, P247L	RASopathy	Benign(Last reviewed: Apr 18, 2017)	reviewed by expert panel	VCV000040611	3	12641718	3	12600219	40611	49081	rs5746220	NC_000003.12:12600218:G:A
+NM_002880.4(RAF1):c.673C>T (p.Pro225Ser)	RAF1	P144S, P225S	Glioma	Benign	no assertion criteria provided	VCV001195988	3	12647707	3	12606208	1195988	1185992		NC_000003.12:12606207:G:A
+NM_002880.4(RAF1):c.212A>G (p.Asn71Ser)	RAF1	N71S	RASopathy	Benign(Last reviewed: Apr 3, 2017)	reviewed by expert panel	VCV000040588	3	12653557	3	12612058	40588	49058	rs184022679	NC_000003.12:12612057:T:C
+NM_002880.4(RAF1):c.119G>A (p.Arg40His)	RAF1	R40H	RASopathy	Benign(Last reviewed: Apr 3, 2017)	reviewed by expert panel	VCV000040585	3	12660102	3	12618603	40585	49055	rs192632236	NC_000003.12:12618602:C:T
+NM_002880.4(RAF1):c.94A>G (p.Ile32Val)	RAF1	I32V	Noonan syndrome and Noonan-related syndrome	Benign(Last reviewed: Jun 27, 2019)	reviewed by expert panel	VCV000040584	3	12660127	3	12618628	40584	49054	rs372738063	NC_000003.12:12618627:T:C

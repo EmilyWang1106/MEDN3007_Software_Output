@@ -1,0 +1,4 @@
+Name	Gene(s)	Protein change	Condition(s)	Clinical significance (Last reviewed)	Review status	Accession	GRCh37Chromosome	GRCh37Location	GRCh38Chromosome	GRCh38Location	VariationID	AlleleID(s)	dbSNP ID	Canonical SPDI
+NM_002875.5(RAD51):c.164C>T (p.Ala55Val)	RAD51	A55V	not specified|not provided	Benign/Likely benign(Last reviewed: Dec 31, 2019)	criteria provided, multiple submitters, no conflicts	VCV000730047	15	40993338	15	40701140	730047	739589	rs145617142	NC_000015.10:40701139:C:T
+NM_002875.5(RAD51):c.166C>T (p.Pro56Ser)	RAD51	P56S	not provided	Benign(Last reviewed: Jul 1, 2022)	criteria provided, single submitter	VCV002192569	15	40993340	15	40701142	2192569	1922652		NC_000015.10:40701141:C:T
+NM_002875.5(RAD51):c.225+719A>C	RAD51	T114P	Ovarian cancer	Benign(Last reviewed: Jan 1, 2022)	criteria provided, single submitter	VCV002445281	15	40994118	15	40701920	2445281	2419008		NC_000015.10:40701919:A:C
