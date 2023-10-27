@@ -8,7 +8,7 @@ output: html_document
 ```{r}
 library(tidyverse)
 library(ggplot2)
-setwd("/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/Old_ITK/ITK_DDG")
+setwd("/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/ITK_DDG")
 DDG_table <- read.csv("/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/ITK_DDG/ITK_DDG_RawTable .csv")
 colnames(DDG_table)
 ```
