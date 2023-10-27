@@ -1,0 +1,464 @@
+---
+title: "ITK_DDG_R_Markdown"
+author: "Emily Wang"
+date: "2023-08-07"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+setwd("/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/Old_ITK/ITK_DDG")
+DDG_table <- read.csv("/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/ITK_DDG/ITK_DDG_RawTable .csv")
+colnames(DDG_table)
+```
+
+```{r}
+gplot <-ggplot(DDG_table, aes(x = X.Position , y=Amino.Acids, fill=DDG))+
+  geom_tile()+
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
+  labs(title = "Heatmap of DDG at each position", x = "Position", y ="Amino Acids", fill = "DDG")+
+  theme_minimal()
+gplot
+```
+
+
+```{r}
+subDDG <- subset(DDG_table, DDG>0.5|DDG< -.5)
+```
+
+
+## The heatmap with bounded functional diability variants 
+```{r}
+gplot1 <- gplot + geom_tile(data = subset(DDG_table, DDG > 0.5 | DDG < -0.5), 
+                            aes(x = X.Position, y = Amino.Acids, color = "black"), 
+                            fill = NA, size = 0.35) 
+gplot1 <- gplot1 +
+  scale_color_manual(name = "Annotation", 
+                     values = c("black"), 
+                     breaks = "black", 
+                     labels = "Functional disability") +
+  theme(legend.position = "right")
+gplot1 
+```
+
+##The heatmap of functional diability variants 
+```{r}
+gplot2 <-ggplot(subDDG, aes(x = X.Position , y=Amino.Acids, fill=DDG))+
+  geom_tile()+
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
+  labs(title = "Heatmap of DDG at each position", x = "Position", y ="Amino Acids", fill = "DDG")+
+  theme_minimal()
+
+gplot2
+
+```
+
+#CMP-potential 
+```{r}
+setwd("/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/ITK_CSM-Potential")
+CSM_table <- read.csv("/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/ITK_CSM-Potential/ITK_CSM-Potential-RawData.csv")
+colnames(CSM_table)
+```
+
+##The heatmap of CMP-potential
+```{r}
+#The heatmap of CSM-Potential
+CMP_plot <- ggplot(CSM_table, aes(x = Position, y = 1, fill=Score))+
+  geom_tile()+
+  geom_tile() +
+  scale_fill_gradient2(mid = "white", high = "red", midpoint = 0) +
+  labs(title = "PPI Interface Residue of ITK at each position", x = "Position", y = "Score", fill = "Score")+
+  theme_minimal()
+
+CMP_plot
+```
+
+```{r}
+setwd("/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output")
+gnom_table <- read.csv("/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/ITK_gnomAD/ITK_genomAD_Table.csv")
+```
+
+
+#The DDG Heatmap + gnomAD Variants
+```{r}
+gnom1 <- gplot + geom_tile(data = gnom_table, 
+                            aes(x=Position.of.Amino.Acids,y = Mutant.Amio.Acids, color = "green"),
+                            fill = NA, size = 0.35) 
+gnom1 <- gnom1 +
+  scale_color_manual(name = "gnomAD Variants", 
+                     values = c("green"), 
+                     labels = "gnomAD Varinats") +
+  theme(legend.position = "right")
+gnom1
+```
+
+
+```{r}
+gnom_table$color ="green"
+gnom_table$color[9] = "red"
+gnom2<- gplot2 + geom_point(data = gnom_table, aes(x=Position.of.Amino.Acids,y = Mutant.Amio.Acids, color= color), fill = NA, size = 0.5)
+
+gnom2 <- gnom2+
+  scale_color_manual(name = "gnomAD variants",
+                     values = c("green", "red"),
+                     labels = c("Bengin", "Pathogenic"))+
+  theme(legend.position = "right")
+
+gnom2
+```
+
+
+```{r}
+setwd('/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/ITK_Solvent_Accessibility')
+SA_table<- read.csv("/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/ITK_Solvent_Accessibility/ITK_Solvent_Accessibility_RawData.csv")
+```
+
+```{r}
+RSA_plot <- ggplot(SA_table, aes(x = n, y = 1, fill=rsa))+
+  geom_tile()+
+  geom_tile() +
+  scale_fill_gradient2(mid = "white", high = "purple", midpoint = 0) +
+  labs(title = "Relative solvent accessibility of residues", x = "Position", y = "RSA value", fill = "RSA value")+
+  theme_minimal()
+
+RSA_plot
+```
+
+```{r}
+ASA_plot <- ggplot(SA_table, aes(x = n, y = 1, fill=asa))+
+  geom_tile()+
+  geom_tile() +
+  scale_fill_gradient2(mid = "white", high = "purple", midpoint = median(SA_table$asa)) +
+  labs(title = "Solvent accessibility surface area of residues", x = "Position", y = "ASA value", fill = "ASA value")+
+  theme_minimal()
+
+ASA_plot
+```
+
+```{r}
+CSM_potential_score <- CSM_table$Score
+RSA_Score <- SA_table$rsa
+ASA_Score <- SA_table$asa
+
+CSM_RSA_table <-  data_frame(CSM_potential_score,RSA_Score)
+
+CSM_ASA_table <- data_frame(CSM_potential_score, ASA_Score)
+
+```
+
+
+```{r}
+CSM_ASA_plot <- ggplot(CSM_ASA_table, aes(x = CSM_potential_score, y = ASA_Score))+
+  geom_point()+
+  geom_smooth()
+
+CSM_ASA_plot
+
+summary(lm(CSM_potential_score~ASA_Score, data = CSM_ASA_table))
+```
+
+
+
+```{r}
+CSM_RSA_plot <- ggplot(CSM_RSA_table, aes(x = CSM_potential_score, y = RSA_Score))+
+  geom_point()+
+  geom_smooth(method = 'lm')
+
+CSM_RSA_plot
+
+summary(lm(CSM_potential_score~RSA_Score, data = CSM_RSA_table))
+```
+
+
+```{r}
+DDG_average<- aggregate(DDG ~ X.Position, DDG_table, mean)
+print(DDG_average)
+```
+
+
+```{r}
+DDG_ASA_table <-  data_frame(DDG_average, ASA_Score)
+
+DDG_RSA_table <- data_frame(DDG_average, RSA_Score)
+```
+
+
+```{r}
+DDG_ASA_plot <- ggplot (DDG_ASA_table, aes(y = DDG_average$DDG, x = ASA_Score))+
+  geom_point()
+
+
+DDG_ASA_plot
+```
+
+```{r}
+DDG_RSA_plot <- ggplot (DDG_ASA_table, aes(y = DDG_average$DDG, x = RSA_Score))+
+  geom_point()
+
+
+DDG_RSA_plot
+```
+
+```{r}
+pp_input_chro <- gnom_table$Chromosome
+pp_input_position <-gnom_table$Position
+pp_input_ref<-gnom_table$Reference
+pp_input_alt <- gnom_table$Alternate
+
+
+pp_input_mut<-paste(pp_input_ref, pp_input_alt, sep = "/")
+pp_input_feature <- rep(1, length(pp_input_chro))
+
+
+
+pp_input_table <- data.frame(pp_input_chro, pp_input_position,pp_input_position,pp_input_mut, pp_input_feature )
+```
+
+```{r}
+for(i in 1:length(pp_input_chro)) {
+  cat(pp_input_chro[i], pp_input_position[i],pp_input_position[i],pp_input_mut[i], pp_input_feature[i], "\n")  
+}
+```
+
+
+
+
+```{r}
+seq <- paste("MNNFILLEEQLIKKSQQKRRTSPSNFKVRFFVLTKASLAYFEDRHGKKRTLKGSIELSRIKCVEIVKSDISIPCHYKYPFQVVHDNYLLYVFAPDRESRQRWVLALKEETRNNNSLVPKYHPNFWMDGKWRCCSQLEKLATGCAQYDPTKNASKKPLPPTPEDNRRPLWEPEETVVIALYDYQTNDPQELALRRNEEYCLLDSSEIHWWRVQDRNGHEGYVPSSYLVEKSPNNLETYEWYNKSISRDKAEKLLLDTGKEGAFMVRDSRTAGTYTVSVFTKAVVSENNPCIKHYHIKETNDNPKRYYVAEKYVFDSIPLLINYHQHNGGGLVTRLRYPVCFGRQKAPVTAGLRYGKWVIDPSELTFVQEIGSGQFGLVHLGYWLNKDKVAIKTIREGAMSEEDFIEEAEVMMKLSHPKLVQLYGVCLEQAPICLVFEFMEHGCLSDYLRTQRGLFAAETLLGMCLDVCEGMAYLEEACVIHRDLAARNCLVGENQVIKVSDFGMTRFVLDDQYTSSTGTKFPVKWASPEVFSFSRYSSKSDVWSFGVLMWEVFSEGKIPYENRSNSEVVEDISTGFRLYKPRLASTHVYQIMNHCWKERPEDRPAFSRLLRQLAEIAESGL")
+
+itk_seq <- unlist(strsplit(seq, split = ""))
+itk_seq
+
+
+
+```
+
+```{r}
+itk_ref<-rep(itk_seq, each = 20)
+itk_position <- DDG_table$X.Position
+itk_alt<-DDG_table$Amino.Acids
+itk_var<-paste0(itk_ref,itk_position,itk_alt)
+
+
+
+itk_head<- rep("ITK:p." ,620*20)
+
+
+```
+
+
+```{r}
+#cat(paste0(itk_head[12000:12400],itk_var[12000:12400]),sep ="\n")
+
+
+
+itk_mut <- itk_var[!grepl("^(.).*\\1$", itk_var)]
+
+
+itk_chain <- rep("A",length(itk_mut))
+
+
+
+
+itk_mCSM_PPI <- data.frame(paste(itk_chain, "",itk_mut))
+
+write.table(itk_mCSM_PPI, file = "itk_mCSM_PPI_input.txt",sep = "\t",quote=F,row.names=F)
+```
+
+```{r}
+ITK_ID <- rep("Q08881" ,620*20)
+cat(paste(ITK_ID,itk_position, itk_ref, itk_alt),sep ="\n")
+
+```
+
+
+
+```{r}
+clinvar_var_position <-c(29,335,221,359,394,504,581,119,171,340)
+clinvar_var_ref <- c("K", "R","V", "D", "R","T", "R","K","P","F")
+clinvar_var_alt <- c("H", "W", "L", "H", "Q", "S","W", "R", "L", "S")
+clinvar_var_pathogenicity <-c("Pathogenic", 'Pathogenic', 'Conflicting interpretations of pathogenicity', 'Conflicting interpretations of pathogenicity', 'Conflicting interpretations of pathogenicity', 'Conflicting interpretations of pathogenicity','Conflicting interpretations of pathogenicity', "Likely Benign","Likely Benign","Likely Benign")
+clinvar_path_table <- data_frame(clinvar_var_position, clinvar_var_ref, clinvar_var_alt, clinvar_var_pathogenicity)
+
+clinvar_path_table
+
+```
+
+
+
+```{r}
+clinvar_plot<- gplot2 + 
+  geom_point(
+    data = clinvar_path_table, aes(x=clinvar_var_position,y = clinvar_var_alt, color= clinvar_var_pathogenicity), fill = NA, size = 1) 
+  
+
+clinvar_plot <- clinvar_plot +
+  scale_color_manual(
+    name = "Clinvar Variants Pathogenicity",
+    values = c("Conflicting interpretations of pathogenicity" = "steelblue", "Pathogenic" = "red", "Likely Benign" = "springgreen3 "),
+    breaks = c("Conflicting interpretations of pathogenicity", "Pathogenic", "Likely Benign"),
+    labels = c("Conflicting interpretations of pathogenicity", "Pathogenic", "Likely Benign")
+    ) +
+  theme(legend.position = "right")
+
+clinvar_plot
+
+
+```
+```{r}
+library(data.table)
+
+AA_alt <-DDG_table$Amino.Acids
+AA_ref <- itk_ref
+Master_table<- data_frame(DDG_table$X.Position, AA_ref, AA_alt,DDG_table$DDG)
+Master_table <- as.data.table(Master_table)
+
+colnames(Master_table)[1] <-"Protein_Position"
+colnames(Master_table)[4] <-"DDG"
+
+pp_table <- fread("/Users/yiyangwang/Desktop/MEDN3007/ITK_VEP/ITK_polyphen.txt")
+Master_table[pp_table, Polyphen:=pph2_prob, on = c(AA_ref="aa1",AA_alt="aa2", Protein_Position = "pos")]
+
+Master_table[is.na(Master_table)] <- 0
+
+Master_table[SA_table, ASA:= asa, on = c(AA_ref="seq", Protein_Position = "n")]
+Master_table[SA_table, RSA:= rsa, on = c(AA_ref="seq", Protein_Position = "n")]
+
+Master_table[CSM_table, CSM_Potential_Score:= Score, on = c(Protein_Position = "Position")]
+
+```
+
+
+```{r}
+Master_table[SA_table, sec_structure := q3, on = c(AA_ref = "seq", Protein_Position = "n")]
+```
+
+```{r}
+Master_table[gnom_table, gnomad_allele_freq := Allele.Frequency, on = c(AA_ref = "Reference.Amio.Acids", Protein_Position = "Position.of.Amino.Acids", AA_alt = "Mutant.Amio.Acids")]
+Master_table$gnomad_allele_freq[is.na(Master_table$gnomad_allele_freq)]<- 0
+
+```
+
+
+
+```{r}
+ITK_CaM_docking <- fread("/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/ITK_Docknet/ITK_docknet_result.pdb")
+```
+
+
+```{r}
+
+Master_table[ITK_CaM_docking, Docknet_Score := V11, on = c(Protein_Position = "V6")]
+  
+```
+
+
+
+
+```{r}
+ITK_ESM1b<- fread("/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/ITK_ESM1b/ITK_ESM_result.csv")
+
+
+```
+
+```{r}
+ITK_ESM1b <- ITK_ESM1b %>%
+  mutate(
+    aa_ref   = stringr::str_extract(variant, "^."),       # Matches the first character
+    position = as.integer(stringr::str_extract(variant, "(?<=^.).*(?=.+$)")), # Matches the middle numbers
+    aa_alt   = stringr::str_extract(variant, ".$")         # Matches the last character
+  )
+
+
+```
+
+```{r}
+Master_table[ITK_ESM1b, ESM1b_Score:= score, on = c(AA_ref="aa_ref", Protein_Position = "position", AA_alt = "aa_alt")]
+```
+
+
+```{r}
+colnames(Master_table)[colnames(Master_table) %in% c("Protein_Position", "AA_alt", "AA_ref", "DDG", "Polyphen", "ASA", "RSA", "CSM_Potential_Score", "sec_structure", "gnomad_allele_freq", "ESM1b_Score")] <- c("aa_pos", "aa_ref", "aa_alt", "ddg", "polyphen", "asa","ras", "CSM_potential", "sec_structure", "allele_frequency", "ESM_score")
+```
+
+```{r}
+Master_table <- Master_table |>
+  select(-Docknet_Score) 
+```
+
+```{r}
+Master_table$uniprot = "Q08881"
+```
+
+
+
+```{r}
+Master_table$protein_A = "ITK"
+```
+
+
+```{r}
+Master_table$clinvar = 2
+```
+
+
+```{r}
+Master_table$clinvar[Master_table$aa_pos == 29 & Master_table$aa_alt == "H"] <- 1
+Master_table$clinvar[Master_table$aa_pos == 335 & Master_table$aa_alt == "W"] <- 1
+
+Master_table$clinvar[Master_table$aa_pos == 193 & Master_table$aa_alt == "Q"] <- 0
+Master_table$clinvar[Master_table$aa_pos == 587 & Master_table$aa_alt == "I"] <- 0
+
+```
+
+
+```{r}
+Master_table$hotspot <- 2
+Master_table$hotspot[Master_table$aa_pos == 228 & Master_table$aa_alt == "G"] <- 1
+
+```
+
+
+```{r}
+
+
+
+grantham_distance <- fread("/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/grantham_distance.txt")
+
+grantham_distance <- grantham_distance |>
+  select(-c("\\f0\\fs24 \\cf0", "\\", "AA" ))
+
+grantham_distance <- as.matrix(grantham_distance)
+
+grantham_distance <- grantham_distance[-1, ]
+
+upper_values <- upper.tri(grantham_distance)
+
+# Assigning the values from the upper triangle to the lower triangle
+grantham_distance[lower.tri(grantham_distance)] <- t(grantham_distance)[lower.tri(grantham_distance)]
+
+rownames(grantham_distance) <- c("A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V")
+colnames(grantham_distance) <- c("A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V")
+
+grantham_distance <- melt(as.matrix(grantham_distance))
+
+
+
+colnames(grantham_distance)[colnames(grantham_distance) %in% c("Var1", "Var2", "value")] <- c("aa_ref", "aa_alt", "distance")
+
+
+ Master_table[grantham_distance, grantham_distance := distance, on = c(aa_alt = "aa_alt", aa_ref = "aa_ref")]
+
+```
+
+```{r}
+Master_table[Master_table$clinvar==1]
+```
+
+```{r}
+write_csv(Master_table,"/Users/yiyangwang/Documents/GitHub/MEDN3007_Software_Output/ITK_test_folder/Master_table_ITK.csv")
+```
+
