@@ -477,7 +477,7 @@ hotspot_table  <- Master_table %>%
    TRUE ~ NA_character_
   ))
 
-hotspot_table$label[is.na(test_table$label)] <- "None"
+hotspot_table$label[is.na(hotspot_table$label)] <- "None"
 ```
 
 
