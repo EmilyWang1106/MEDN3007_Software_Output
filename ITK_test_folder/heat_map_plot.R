@@ -30,3 +30,17 @@ itk_hotspot_plot <- ggplot(itk.hotspot.prediction, aes(x = aa_pos, y = aa_alt, f
   theme_minimal()
 
 print(itk_hotspot_plot)
+
+itk_predictions<- data.frame(itk.clinvar.prediction$.pred_pathogenic, itk.hotspot.prediction$.pred_PPI)
+
+s_plot<- ggplot(itk_predictions, aes(x= itk.hotspot.prediction$.pred_PPI, y=itk.clinvar.prediction$.pred_pathogenic))+
+  geom_point(alpha = 0.1)+ 
+  labs(title = "", x = "PPI-disruption", y = "Pathogenicity")
+
+print(s_plot)
+
+d_plot <- ggplot(itk_predictions, aes(x = itk.hotspot.prediction$.pred_PPI, y = itk.clinvar.prediction$.pred_pathogenic)) +
+  geom_bin2d() +  # Use this for filled contour density plot
+  labs(title = "", x = "PPI-disruption", y = "Pathogenicity")
+
+print(d_plot)
